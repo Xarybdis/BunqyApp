@@ -13,6 +13,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
+private const val BASE_URL = "https://public-api.sandbox.bunq.com/v1/"
+
 val networkModule = module {
     single(named(NetworkModule.BASE_URL)) { BASE_URL }
 
@@ -22,7 +24,24 @@ val networkModule = module {
         interceptor
     }
 
-    single {
+    /**
+     * Creating client for in installation .
+     */
+    single(named(NetworkModule.INSTALLATION_CLIENT)) {
+        val client = OkHttpClient().newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+
+        if (BuildConfig.DEBUG) {
+            client.addInterceptor(get<HttpLoggingInterceptor>())
+        }
+        client.build()
+    }
+    /**
+     * Creating client for in app requests.
+     */
+    single(named(NetworkModule.API_CLIENT)) {
         val client = OkHttpClient().newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -46,7 +65,16 @@ val networkModule = module {
             .baseUrl(get<String>(named(NetworkModule.BASE_URL)))
             .addConverterFactory(MoshiConverterFactory.create(get()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(get())
+            .client(get(named(NetworkModule.INSTALLATION_CLIENT)))
+            .build()
+    }
+
+    single {
+        Retrofit.Builder()
+            .baseUrl(get<String>(named(NetworkModule.BASE_URL)))
+            .addConverterFactory(MoshiConverterFactory.create(get()))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(get(named(NetworkModule.API_CLIENT)))
             .build()
     }
 
@@ -55,8 +83,9 @@ val networkModule = module {
     }
 }
 
-private const val BASE_URL = "https://api.canlidoviz.com/"
 
 enum class NetworkModule {
-    BASE_URL
+    BASE_URL,
+    INSTALLATION_CLIENT,
+    API_CLIENT
 }
