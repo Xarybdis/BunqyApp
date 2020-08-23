@@ -1,3 +1,7 @@
 <resources>
+    <!--BOTTOM NAVIGATION BAR-->
     <string name="app_name">BunqyApp</string>
+    <string name="transaction_list">Transaction List</string>
+    <string name="new_transaction">New Transaction</string>
+    <string name="profile">Profile</string>
 </resources>

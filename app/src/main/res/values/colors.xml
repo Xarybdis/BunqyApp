@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimary">#4834D4</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="onboarding_text_dark_blue">#130F40</color>
+    <color name="onboarding_button_soft_dark_blue">#6C63FF</color>
+    <color name="onboarding_view_gray">#E0E0E0</color>
+
+    <color name="recycler_item_title_color_gray">#9693B0</color>
+    <color name="recycler_item_title_color_dark_blue">#4834D4</color>
+    <color name="recycler_item_title_color_black">#222222</color>
 </resources>
