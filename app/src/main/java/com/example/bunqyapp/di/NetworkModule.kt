@@ -15,7 +15,8 @@ import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://public-api.sandbox.bunq.com/v1/"
 
-val networkModule = module {
+val networkModule = module(override = true) {
+
     single(named(NetworkModule.BASE_URL)) { BASE_URL }
 
     single {
