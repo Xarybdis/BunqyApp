@@ -1,9 +1,12 @@
-package com.example.bunqyapp.ui.main
+package com.example.bunqyapp.ui.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bunqyapp.network.ApiService
 import com.example.bunqyapp.network.model.*
+import com.example.bunqyapp.network.model.money_inquiry.InquiryRequest
+import com.example.bunqyapp.network.model.money_inquiry.InquiryResponse
+import com.example.bunqyapp.network.model.monetary_account.MonetaryAccountDetailResponse
 import com.example.bunqyapp.util.ConnectionSecurityUtils
 import com.example.bunqyapp.util.StringUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,11 +16,14 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.qualifier.named
+import timber.log.Timber
 
-class MainViewModel : ViewModel(), KoinComponent {
+class GeneralViewModel : ViewModel(), KoinComponent {
     val installationData = MutableLiveData<ServiceInstallationResponse>()
     val deviceServerData = MutableLiveData<DeviceServerResponse>()
     val sessionData = MutableLiveData<SessionServerResponse>()
+    val inquiryData = MutableLiveData<InquiryResponse>()
+    val monetaryAccountDetailData = MutableLiveData<List<MonetaryAccountDetailResponse>>()
     val loading = MutableLiveData<Boolean>()
     val onError = MutableLiveData<Boolean>()
 
@@ -26,8 +32,8 @@ class MainViewModel : ViewModel(), KoinComponent {
     private val connectionSecurityUtils: ConnectionSecurityUtils = get()
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    fun getInstallation() {
-        createInstallation()
+    fun getInstallation(installationRequest: InstallationRequest) {
+        createInstallation(installationRequest)
     }
 
     fun getDeviceServer() {
@@ -38,14 +44,19 @@ class MainViewModel : ViewModel(), KoinComponent {
         createSession()
     }
 
-    private fun createInstallation() {
+    fun getMonetaryAccountDetails(id: Int) {
+        createMonetaryAccountDetails(id)
+    }
+
+    fun startInquiry(id: Int, monetaryId: Int, inquiryRequest: InquiryRequest) {
+        createInquiry(id, monetaryId, inquiryRequest)
+    }
+
+    private fun createInstallation(installationRequest: InstallationRequest) {
         loading.value = true
-        //Bunu burda yapmak mantikli degil, bunu activity icinde yap ki destroy oldugunda yenilensin
-        val installationRequestModel =
-            InstallationRequest(connectionSecurityUtils.createPKCS8StandardPublicKey(connectionSecurityUtils.keyPair))
 
         disposable.add(
-            apiServiceAuth.startInstallation(installationRequestModel)
+            apiServiceAuth.startInstallation(installationRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<ServiceInstallationResponse>() {
@@ -56,7 +67,7 @@ class MainViewModel : ViewModel(), KoinComponent {
                     }
 
                     override fun onError(e: Throwable) {
-                        println(e.localizedMessage)
+                        Timber.e(e.localizedMessage)
                         loading.value = false
                         onError.value = true
                     }
@@ -81,7 +92,7 @@ class MainViewModel : ViewModel(), KoinComponent {
                     }
 
                     override fun onError(e: Throwable) {
-                        println(e.localizedMessage)
+                        Timber.e(e.localizedMessage)
                         loading.value = false
                         onError.value = true
                     }
@@ -92,7 +103,6 @@ class MainViewModel : ViewModel(), KoinComponent {
     private fun createSession() {
         loading.value = true
         val sessionApiKey = SessionRequest(StringUtils.API_KEY)
-        println("POint")
         disposable.add(
             apiServiceClient.startSession(sessionApiKey)
                 .subscribeOn(Schedulers.io())
@@ -105,11 +115,57 @@ class MainViewModel : ViewModel(), KoinComponent {
                     }
 
                     override fun onError(e: Throwable) {
-                        println(e.localizedMessage)
+                        Timber.e(e.localizedMessage)
                         loading.value = false
                         onError.value = true
                     }
                 })
+        )
+    }
+
+    private fun createInquiry(id: Int, monetaryId: Int, inquiryRequest: InquiryRequest) {
+        loading.value = true
+        disposable.add(
+            apiServiceClient.startNewPayment(id, monetaryId, inquiryRequest)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<InquiryResponse>() {
+                    override fun onSuccess(data: InquiryResponse) {
+                        inquiryData.value = data
+                        loading.value = false
+                        onError.value = false
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e.localizedMessage)
+                        loading.value = false
+                        onError.value = true
+                    }
+                })
+
+        )
+    }
+
+    private fun createMonetaryAccountDetails(id: Int) {
+        loading.value = true
+        disposable.add(
+            apiServiceClient.getMonetaryAccountDetail(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<MonetaryAccountDetailResponse>>() {
+                    override fun onSuccess(data: List<MonetaryAccountDetailResponse>) {
+                        monetaryAccountDetailData.value = data
+                        loading.value = false
+                        onError.value = false
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e.localizedMessage)
+                        loading.value = false
+                        onError.value = true
+                    }
+                })
+
         )
     }
 

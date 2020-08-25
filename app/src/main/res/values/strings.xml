@@ -4,4 +4,18 @@
     <string name="transaction_list">Transaction List</string>
     <string name="new_transaction">New Transaction</string>
     <string name="profile">Profile</string>
+
+    <!--PAYMENT INQUIRY SCREEN-->
+    <string name="til_hint_receiver_name">Receiver Name</string>
+    <string name="til_hint_receiver_email">Receiver Email</string>
+    <string name="til_hint_receiver_iban">Receiver IBAN</string>
+    <string name="til_hint_receiver_amount">Amount</string>
+    <string name="til_hint_receiver_decription">Description</string>
+    <string name="email_button_text">Send Money via Email</string>
+    <string name="iban_button_text">Send Money via IBAN</string>
+    <string name="phone_button_text">Send Money via Phone Number</string>
+    <string name="send_money_button_text">Send Money</string>
+
+    <!--ERROR TOAST-->
+    <string name="payment_fragment_error">Something went wrong during payment. Please try again later.</string>
 </resources>

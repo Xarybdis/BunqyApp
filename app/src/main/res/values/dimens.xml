@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="payment_card_margin">10dp</dimen>
+    <dimen name="payment_card_elevation">5dp</dimen>
+    <dimen name="send_money_btn_side_padding">20dp</dimen>
+    <dimen name="send_money_button_vertical_padding">5dp</dimen>
+    <dimen name="card_inside_padding">15dp</dimen>
+    <dimen name="profile_screen_margin_mid">20dp</dimen>
+
+</resources>
