@@ -4,9 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bunqyapp.network.ApiService
 import com.example.bunqyapp.network.model.*
+import com.example.bunqyapp.network.model.monetary.MonetaryResponse
 import com.example.bunqyapp.network.model.money_inquiry.InquiryRequest
 import com.example.bunqyapp.network.model.money_inquiry.InquiryResponse
-import com.example.bunqyapp.network.model.monetary_account.MonetaryAccountDetailResponse
+import com.example.bunqyapp.network.model.payment_list.PaymentResponse
+import com.example.bunqyapp.network.model.request_inquiry_result.InquiryDetailResponse
 import com.example.bunqyapp.util.ConnectionSecurityUtils
 import com.example.bunqyapp.util.StringUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +25,9 @@ class GeneralViewModel : ViewModel(), KoinComponent {
     val deviceServerData = MutableLiveData<DeviceServerResponse>()
     val sessionData = MutableLiveData<SessionServerResponse>()
     val inquiryData = MutableLiveData<InquiryResponse>()
-    val monetaryAccountDetailData = MutableLiveData<List<MonetaryAccountDetailResponse>>()
+    val monetaryAccountDetailData = MutableLiveData<MonetaryResponse>()
+    val inquiryDetailData = MutableLiveData<InquiryDetailResponse>()
+    val fetchPaymentData = MutableLiveData<PaymentResponse>()
     val loading = MutableLiveData<Boolean>()
     val onError = MutableLiveData<Boolean>()
 
@@ -50,6 +54,14 @@ class GeneralViewModel : ViewModel(), KoinComponent {
 
     fun startInquiry(id: Int, monetaryId: Int, inquiryRequest: InquiryRequest) {
         createInquiry(id, monetaryId, inquiryRequest)
+    }
+
+    fun getInquiryDetails(userId: Int, monetaryId: Int, itemId: Int) {
+        createInquiryDetails(userId, monetaryId, itemId)
+    }
+
+    fun getPaymentList(userId: Int, monetaryId: Int) {
+        fetchPaymentList(userId, monetaryId)
     }
 
     private fun createInstallation(installationRequest: InstallationRequest) {
@@ -152,8 +164,8 @@ class GeneralViewModel : ViewModel(), KoinComponent {
             apiServiceClient.getMonetaryAccountDetail(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<MonetaryAccountDetailResponse>>() {
-                    override fun onSuccess(data: List<MonetaryAccountDetailResponse>) {
+                .subscribeWith(object : DisposableSingleObserver<MonetaryResponse>() {
+                    override fun onSuccess(data: MonetaryResponse) {
                         monetaryAccountDetailData.value = data
                         loading.value = false
                         onError.value = false
@@ -165,7 +177,52 @@ class GeneralViewModel : ViewModel(), KoinComponent {
                         onError.value = true
                     }
                 })
+        )
+    }
 
+    private fun createInquiryDetails(userId: Int, monetaryId: Int, itemId: Int) {
+        loading.value = true
+        disposable.add(
+            apiServiceClient.getInquiryDetails(userId, monetaryId, itemId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<InquiryDetailResponse>() {
+                    override fun onSuccess(data: InquiryDetailResponse) {
+                        inquiryDetailData.value = data
+                        loading.value = false
+                        onError.value = false
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e.localizedMessage)
+                        loading.value = false
+                        onError.value = true
+                    }
+                })
+        )
+    }
+
+    private fun fetchPaymentList(userId: Int, monetaryId: Int) {
+        loading.value = true
+        disposable.add(
+            apiServiceClient.fetchPaymentList(userId, monetaryId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<PaymentResponse>() {
+                    override fun onSuccess(data: PaymentResponse) {
+                        fetchPaymentData.value = data
+                        loading.value = false
+                        onError.value = false
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e.localizedMessage)
+                        loading.value = false
+                        onError.value = true
+                    }
+                })
         )
     }
 

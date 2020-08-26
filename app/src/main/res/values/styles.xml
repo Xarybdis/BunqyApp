@@ -7,5 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
+    <style name="loadingStyle">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>

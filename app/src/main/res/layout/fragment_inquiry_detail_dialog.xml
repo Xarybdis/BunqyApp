@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui._money_transaction.InquiryDetail">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/emailPaymentCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/payment_card_margin"
+        android:background="@color/white"
+        app:cardCornerRadius="@dimen/payment_card_margin"
+        app:cardElevation="@dimen/payment_card_elevation"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_cardview_rounded"
+            android:orientation="vertical"
+            android:padding="@dimen/payment_card_margin">
+
+            <ImageView
+                android:id="@+id/imageAccepted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_tick"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/paymentStatusTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/profile_screen_margin_mid"
+                android:text="Payment Status:"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.15"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageAccepted" />
+
+            <TextView
+                android:id="@+id/paymentStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/payment_card_margin"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/paymentStatusTitle"
+                app:layout_constraintLeft_toRightOf="@id/paymentStatusTitle"
+                app:layout_constraintTop_toTopOf="@id/paymentStatusTitle"
+                tools:text="ACCEPTED" />
+
+            <TextView
+                android:id="@+id/paymentIdTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/profile_screen_margin_mid"
+                android:text="Payment ID:"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintLeft_toLeftOf="@id/paymentStatusTitle"
+                app:layout_constraintTop_toBottomOf="@id/paymentStatusTitle" />
+
+            <TextView
+                android:id="@+id/paymentId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/paymentIdTitle"
+                app:layout_constraintLeft_toRightOf="@id/paymentIdTitle"
+                app:layout_constraintTop_toTopOf="@id/paymentIdTitle"
+                tools:text="1654654" />
+
+            <TextView
+                android:id="@+id/paymentAmountTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/profile_screen_margin_mid"
+                android:text="Payment Amount:"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@id/paymentIdTitle"
+                app:layout_constraintTop_toBottomOf="@id/paymentIdTitle" />
+
+            <TextView
+                android:id="@+id/paymentAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/paymentAmountTitle"
+                app:layout_constraintLeft_toRightOf="@id/paymentAmountTitle"
+                app:layout_constraintTop_toTopOf="@id/paymentAmountTitle"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/paymentCreatedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/profile_screen_margin_mid"
+                android:text="Payment Date:"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintLeft_toLeftOf="@id/paymentAmountTitle"
+                app:layout_constraintTop_toBottomOf="@id/paymentAmountTitle" />
+
+            <TextView
+                android:id="@+id/paymentCreated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_elevation"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/paymentCreatedTitle"
+                app:layout_constraintLeft_toRightOf="@id/paymentCreatedTitle"
+                app:layout_constraintTop_toTopOf="@id/paymentCreatedTitle"
+                tools:text="2020/26/08" />
+
+            <TextView
+                android:id="@+id/goBackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/profile_screen_margin_mid"
+                android:background="@drawable/bg_send_money_button"
+                android:paddingLeft="@dimen/dialog_button_side"
+                android:paddingTop="@dimen/send_money_button_vertical_padding"
+                android:paddingRight="@dimen/dialog_button_side"
+                android:paddingBottom="@dimen/send_money_button_vertical_padding"
+                android:text="Okay"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/paymentCreatedTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

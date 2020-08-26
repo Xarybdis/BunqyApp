@@ -3,6 +3,7 @@ package com.example.bunqyapp
 import android.app.Application
 import com.example.bunqyapp.di.applicationModule
 import com.example.bunqyapp.di.networkModule
+import com.example.bunqyapp.di.viewModelModule
 import com.facebook.stetho.Stetho
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +20,7 @@ class BaseApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@BaseApplication)
-            modules(listOf(networkModule, applicationModule))
+            modules(listOf(networkModule, applicationModule, viewModelModule))
         }
 
     }

@@ -7,28 +7,32 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.example.bunqyapp.R
 import com.example.bunqyapp.network.model.money_inquiry.AmountInquired
 import com.example.bunqyapp.network.model.money_inquiry.CounterpartyAlias
 import com.example.bunqyapp.network.model.money_inquiry.InquiryRequest
+import com.example.bunqyapp.ui.main.MainActivity
 import com.example.bunqyapp.ui.viewModel.GeneralViewModel
 import com.example.bunqyapp.util.StringUtils
 import com.example.bunqyapp.util.replaceSource
+import com.example.bunqyapp.util.showToast
 import com.example.bunqyapp.util.visible
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_new_transaction.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
+
+@Suppress("UNUSED_ANONYMOUS_PARAMETER")
 class FragmentNewPaymentTransaction(val position: Int) : Fragment() {
-    var type: String = EMAIL
-    private var monetaryAccountId: Int = 0
-    lateinit var viewModel: GeneralViewModel
+    private val viewModel: GeneralViewModel by viewModel()
+    private var cardId: Int = 0
+    private var type: String = EMAIL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(GeneralViewModel::class.java)
-        viewModel.getMonetaryAccountDetails(StringUtils.CURRENT_USER_ID)
     }
 
     override fun onCreateView(
@@ -42,20 +46,26 @@ class FragmentNewPaymentTransaction(val position: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickFunctions()
+        viewModel.getMonetaryAccountDetails(StringUtils.CURRENT_USER_ID)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        observeMonetaryAccount()
     }
 
     private fun observeMonetaryAccount() {
         viewModel.monetaryAccountDetailData.observe(this, Observer {
-            it[0].id.let { it ->
-                monetaryAccountId = it?.toInt() ?: 0
+            it.response?.get(0)?.monetaryAccountBank?.id.let { it ->
+                StringUtils.CURRENT_MONETARY_ACCOUNT = it?.toInt() ?: 0
             }
 
         })
         viewModel.loading.observe(this, Observer { loading ->
             if (loading) {
-                //showProgress
+                (activity as MainActivity?)?.showLoading()
             } else {
-                //hideProgress
+                (activity as MainActivity?)?.hideLoading()
             }
         })
 
@@ -68,46 +78,56 @@ class FragmentNewPaymentTransaction(val position: Int) : Fragment() {
 
     private fun observeInquiry() {
         viewModel.inquiryData.observe(this, Observer {
-            it.response?.get(0)?.idResult?.let {
-                println("Here :$id")
+            it.response?.get(0)?.idResult?.let { it ->
+                it.id?.let { it1 ->
+                    viewModel.getInquiryDetails(StringUtils.CURRENT_USER_ID, StringUtils.CURRENT_MONETARY_ACCOUNT, it1)
+                    observeInquiryDetail()
+                }
             }
         })
 
         viewModel.loading.observe(this, Observer { loading ->
             if (loading) {
-                //showProgress
+                (activity as MainActivity?)?.showLoading()
             } else {
-                //hideProgress
+                (activity as MainActivity?)?.hideLoading()
             }
         })
 
         viewModel.onError.observe(this, Observer { onError ->
             if (onError) {
-                //ShowPopup or smth
+                (activity as MainActivity?)?.showToast("An error occurred during requesting inquiry.")
+            }
+        })
+    }
+
+    private fun observeInquiryDetail() {
+        viewModel.inquiryDetailData.observe(this, Observer {
+
+            it.let {
+                val fragmentManager: FragmentManager? = fragmentManager
+                val fragmentTransaction: FragmentTransaction? = fragmentManager?.beginTransaction()
+                fragmentTransaction?.add(InquiryDetail(it), "InquiryDialog")
+                fragmentTransaction?.commit()
+            }
+        })
+
+        viewModel.loading.observe(this, Observer { loading ->
+            if (loading) {
+                (activity as MainActivity?)?.showLoading()
+            } else {
+                (activity as MainActivity?)?.hideLoading()
+            }
+        })
+
+        viewModel.onError.observe(this, Observer { onError ->
+            if (onError) {
+                (activity as MainActivity?)?.showToast("An error occurred during requesting inquiry details.")
             }
         })
     }
 
     private fun clickFunctions() {
-        sendMoneyIban.setOnClickListener {
-            val inquiryRequest = gatherDataFromFields(etNameIban, etIbanNumber, etAmountIban, etDescriptionIban, "IBAN")
-
-            viewModel.startInquiry(StringUtils.CURRENT_USER_ID, monetaryAccountId, inquiryRequest)
-            observeInquiry()
-        }
-        sendMoneyEmail.setOnClickListener {
-            val inquiryRequest = gatherDataFromFields(etNameMail, etEmail, etAmountEmail, etDescriptionEmail, "EMAIL")
-
-            viewModel.startInquiry(StringUtils.CURRENT_USER_ID, monetaryAccountId, inquiryRequest)
-            observeInquiry()
-        }
-        sendMoneyPhone.setOnClickListener {
-            val inquiryRequest = gatherDataFromFields(etNamePhone, etPhone, etAmountPhone, etDescriptionPhone, "PHONE")
-
-            viewModel.startInquiry(StringUtils.CURRENT_USER_ID, monetaryAccountId, inquiryRequest)
-            observeInquiry()
-        }
-
         emailPaymentCard.setOnClickListener {
             controlCards(EMAIL)
         }
@@ -119,6 +139,40 @@ class FragmentNewPaymentTransaction(val position: Int) : Fragment() {
         phonePaymentCard.setOnClickListener {
             controlCards(PHONE)
         }
+
+        sendMoneyEmail.setOnClickListener {
+            val inquiryRequest = gatherDataFromFields(etNameMail, etEmail, etAmountEmail, etDescriptionEmail, "EMAIL")
+
+            if (layoutEmail.isVisible) {
+                if (checkFields(cardId)) {
+                    viewModel.startInquiry(StringUtils.CURRENT_USER_ID, StringUtils.CURRENT_MONETARY_ACCOUNT, inquiryRequest)
+                    observeInquiry()
+                }
+            }
+        }
+
+        sendMoneyIban.setOnClickListener {
+            val inquiryRequest = gatherDataFromFields(etNameIban, etIbanNumber, etAmountIban, etDescriptionIban, "IBAN")
+
+            if (layoutIban.isVisible) {
+                if (checkFields(cardId)) {
+                    viewModel.startInquiry(StringUtils.CURRENT_USER_ID, StringUtils.CURRENT_MONETARY_ACCOUNT, inquiryRequest)
+                    observeInquiry()
+                }
+            }
+        }
+
+        sendMoneyPhone.setOnClickListener {
+            val inquiryRequest = gatherDataFromFields(etNamePhone, etPhone, etAmountPhone, etDescriptionPhone, "PHONE")
+
+            if (layoutPhone.isVisible) {
+                if (checkFields(cardId)) {
+                    viewModel.startInquiry(StringUtils.CURRENT_USER_ID, StringUtils.CURRENT_MONETARY_ACCOUNT, inquiryRequest)
+                    observeInquiry()
+                }
+            }
+        }
+
     }
 
     private fun gatherDataFromFields(
@@ -142,21 +196,46 @@ class FragmentNewPaymentTransaction(val position: Int) : Fragment() {
             EMAIL -> {
                 layoutEmail.isVisible = true
                 cardArrow.setImageResource(R.drawable.ic_arrow)
+                cardId = 0
             }
             IBAN -> {
                 layoutIban.isVisible = true
                 cardArrowIban.setImageResource(R.drawable.ic_arrow)
+                cardId = 1
             }
             PHONE -> {
                 layoutPhone.isVisible = true
                 cardArrowPhone.setImageResource(R.drawable.ic_arrow)
+                cardId = 2
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        observeMonetaryAccount()
+    private fun checkFields(cardId: Int): Boolean {
+        var isValid: Boolean = true
+        when (cardId) {
+            0 -> {
+                isValid = multiFieldValidation(etNameMail, etEmail, etAmountEmail)
+            }
+            1 -> {
+                isValid = multiFieldValidation(etNameIban, etIbanNumber, etAmountIban)
+            }
+            2 -> {
+                isValid = multiFieldValidation(etNamePhone, etPhone, etAmountPhone)
+            }
+        }
+        return isValid
+    }
+
+    private fun multiFieldValidation(vararg edittext: TextInputEditText): Boolean {
+        var isValid: Boolean = true
+        for (text in edittext) {
+            if (text.text.isNullOrEmpty()) {
+                text.error = "Please fill the text."
+                isValid = false
+            }
+        }
+        return isValid
     }
 
     companion object {

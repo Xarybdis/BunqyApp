@@ -1,9 +1,11 @@
 package com.example.bunqyapp.network
 
 import com.example.bunqyapp.network.model.*
+import com.example.bunqyapp.network.model.monetary.MonetaryResponse
 import com.example.bunqyapp.network.model.money_inquiry.InquiryRequest
 import com.example.bunqyapp.network.model.money_inquiry.InquiryResponse
-import com.example.bunqyapp.network.model.monetary_account.MonetaryAccountDetailResponse
+import com.example.bunqyapp.network.model.payment_list.PaymentResponse
+import com.example.bunqyapp.network.model.request_inquiry_result.InquiryDetailResponse
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -29,5 +31,15 @@ interface ApiService {
     ): Single<InquiryResponse>
 
     @GET("user/{userID}/monetary-account")
-    fun getMonetaryAccountDetail(@Path("userID") id: Int?): Single<List<MonetaryAccountDetailResponse>>
+    fun getMonetaryAccountDetail(@Path("userID") id: Int?): Single<MonetaryResponse>
+
+    @GET("user/{userID}/monetary-account/{monetaryAccountId}/request-inquiry/{itemId}")
+    fun getInquiryDetails(
+        @Path("userID") userId: Int?,
+        @Path("monetaryAccountId") monetaryAccountId: Int?,
+        @Path("itemId") itemId: Int?
+    ): Single<InquiryDetailResponse>
+
+    @GET("user/{userID}/monetary-account/{monetaryAccountId}/payment")
+    fun fetchPaymentList(@Path("userID") id: Int?, @Path("monetaryAccountId") monetaryAccountId: Int?): Single<PaymentResponse>
 }
