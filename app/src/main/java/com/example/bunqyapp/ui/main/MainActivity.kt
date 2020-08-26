@@ -28,12 +28,20 @@ class MainActivity() : AppCompatActivity(), KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startActions()
+    }
+
+    private fun startActions() {
         val installationRequestModel =
             InstallationRequest(connectionSecurityUtils.createPKCS8StandardPublicKey(connectionSecurityUtils.keyPair))
 
         viewModel.getInstallation(installationRequestModel)
         observeInstallation()
-
+        layoutBottomBar.isEnabled = false
         clickFunctions()
     }
 
@@ -43,9 +51,10 @@ class MainActivity() : AppCompatActivity(), KoinComponent {
         viewModel.installationData.observe(this, Observer {
             it.response?.get(InstallationResult.TOKEN)?.token.let { it ->
                 StringUtils.API_TOKEN = it?.token.toString()
+                viewModel.getDeviceServer()
+                observeDeviceServer()
+                layoutBottomBar.isEnabled = true
             }
-            viewModel.getDeviceServer()
-            observeDeviceServer()
         })
 
         viewModel.loading.observe(this, Observer { loading ->

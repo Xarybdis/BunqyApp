@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.bunqyapp.R
 import com.example.bunqyapp.network.model.payment_list.Payment
-import kotlinx.android.synthetic.main.fragment_inquiry_detail_dialog.*
+import kotlinx.android.synthetic.main.fragment_payment_detail_dialog.*
 
 class PaymentDetailDialog(private val paymentItem: Payment) :
     DialogFragment() {
@@ -27,7 +26,6 @@ class PaymentDetailDialog(private val paymentItem: Payment) :
 
     override fun onStart() {
         super.onStart()
-        // setDialogConfigurations()
         setUi()
     }
 
@@ -35,7 +33,7 @@ class PaymentDetailDialog(private val paymentItem: Payment) :
         super.onViewCreated(view, savedInstanceState)
 
         goBackButton.setOnClickListener {
-            fragmentManager?.popBackStackImmediate()
+            fragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
     }
 

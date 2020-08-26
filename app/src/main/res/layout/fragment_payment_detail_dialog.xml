@@ -43,14 +43,13 @@
                 android:id="@+id/paymentIdTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/payment_card_margin"
                 android:layout_marginTop="@dimen/profile_screen_margin_mid"
                 android:text="Payment ID:"
                 android:textColor="@color/onboarding_button_soft_dark_blue"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0.15"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageAccepted" />
 
             <TextView
@@ -100,7 +99,6 @@
                 android:textColor="@color/onboarding_button_soft_dark_blue"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0.3"
                 app:layout_constraintLeft_toLeftOf="@id/paymentAmountTitle"
                 app:layout_constraintTop_toBottomOf="@id/paymentAmountTitle" />
 
@@ -110,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/payment_card_elevation"
                 android:textColor="@android:color/holo_green_dark"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/paymentCreatedTitle"
                 app:layout_constraintLeft_toRightOf="@id/paymentCreatedTitle"
