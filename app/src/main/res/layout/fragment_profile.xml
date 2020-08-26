@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/emailPaymentCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/payment_card_margin"
+        app:cardCornerRadius="@dimen/payment_card_margin"
+        app:cardElevation="@dimen/payment_card_elevation"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_cardview_rounded"
+            android:orientation="vertical"
+            android:padding="@dimen/payment_card_margin">
+
+
+            <ImageView
+                android:id="@+id/userAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/payment_card_margin"
+                android:src="@drawable/ic_userprofile"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.2" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@id/userAvatar"
+                app:layout_constraintRight_toRightOf="@id/userAvatar"
+                app:layout_constraintTop_toBottomOf="@id/userAvatar"
+                tools:text="Name Surname" />
+
+            <TextView
+                android:id="@+id/userIdTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/profile_screen_margin_mid"
+                android:text="ID:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userName" />
+
+            <TextView
+                android:id="@+id/userId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/userIdTitle"
+                app:layout_constraintLeft_toRightOf="@id/userIdTitle"
+                app:layout_constraintTop_toTopOf="@id/userIdTitle"
+                tools:text="1654654" />
+
+            <TextView
+                android:id="@+id/userPhoneNumberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/profile_screen_margin_mid"
+                android:text="Phone:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userIdTitle" />
+
+            <TextView
+                android:id="@+id/userPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/userPhoneNumberTitle"
+                app:layout_constraintLeft_toRightOf="@id/userPhoneNumberTitle"
+                app:layout_constraintTop_toTopOf="@id/userPhoneNumberTitle"
+                tools:text="+31616830568" />
+
+            <TextView
+                android:id="@+id/userEmailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/profile_screen_margin_mid"
+                android:text="Email:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userPhoneNumberTitle" />
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/payment_card_margin"
+                android:textColor="@color/onboarding_button_soft_dark_blue"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/userEmailTitle"
+                app:layout_constraintLeft_toRightOf="@id/userEmailTitle"
+                app:layout_constraintTop_toTopOf="@id/userEmailTitle"
+                tools:text="blabla@gmail.com" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

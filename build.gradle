@@ -24,3 +24,15 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+ext{
+    lifecycle_version ="2.2.0"
+    retrofit_version = "2.4.0"
+    okHttp_version = "4.7.0"
+    rxJava_version = "2.2.18"
+    rxAndroid_version = "2.1.1"
+    glide_version = "4.11.0"
+    koin_version = "2.1.5"
+    timber_version = "4.7.1"
+    moshi_version = "1.8.0"
+    stetho_version = "1.5.1"
+}
