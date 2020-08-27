@@ -5,6 +5,7 @@
 * [Insight](#Insight)
 * [Technologies Used](#technologiesUsed)
 
+![](animation.gif)
 
 ## Insight
 This is an app which gives you the ability to send money using APIs from https://doc.bunq.com/.
