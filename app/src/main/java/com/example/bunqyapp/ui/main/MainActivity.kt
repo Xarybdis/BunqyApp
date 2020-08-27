@@ -95,7 +95,8 @@ class MainActivity() : AppCompatActivity(), KoinComponent {
 
         viewModel.onError.observe(this, Observer { onError ->
             if (onError) {
-                //ShowPopup or smth
+                showToast("An error occurred while connecting to the server.")
+                Timber.e("MainActivity: Error in starting the device server.")
             }
         })
     }
