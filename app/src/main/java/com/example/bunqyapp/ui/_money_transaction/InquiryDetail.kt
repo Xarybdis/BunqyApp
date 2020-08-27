@@ -26,7 +26,6 @@ class InquiryDetail(private val inquiryResponse: InquiryDetailResponse) :
 
     override fun onStart() {
         super.onStart()
-        // setDialogConfigurations()
         setUi()
     }
 
